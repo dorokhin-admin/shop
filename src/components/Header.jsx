@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {FaShoppingCart} from "react-icons/fa";
-import Order from "./Order.js";
+import Order from "./Order.jsx";
 
 const showOrders = (props) => {
     let sum = 0;
