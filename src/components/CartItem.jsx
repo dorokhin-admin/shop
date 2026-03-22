@@ -6,18 +6,18 @@ class CartItem extends Component {
         this.state = {quantity:0}
     }
     render() {
-        const {item} = this.props;
+        const {item,inAdd,inDel} = this.props;
+        const { quantity } = this.state;
+        const total = Number(item.price) * quantity
         return (
             <div>
                 <p>{item.title}: {item.price}</p>
 
-                <button onClick={()=> this.props.inAdd(this.props.item)}>+</button>
-                <button onClick={()=> this.props.inDel(this.props.item)}>-</button>
+                <button onClick={()=> inAdd(item)}>+</button>
+                <button onClick={()=> inDel(item)}>-</button>
 
-                <p>{item.title}: Number({item.price})$ * {this.state.quantity} </p>
+                <p>{item.title}: {total} </p>
             </div>
-
-
         );
     }
 }

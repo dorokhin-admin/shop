@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import Items  from "./components/Items.jsx";
-import CartItem from "./components/CartItem.jsx";
+
 
 class App extends React.Component {
   constructor(props){
@@ -13,9 +13,6 @@ class App extends React.Component {
             { id:2, title: "iPhone 15", price: 199, quantity: 1 },
             { id:3, title: "iPhone 16", price: 799, quantity: 1 }
             ],
-        cartItems:[
-            {id:1, title:'sadasd', price:100,quantity:100}
-        ],
         orders : [],
       items: [
           {
@@ -70,33 +67,51 @@ class App extends React.Component {
     }
       this.addToOrder = this.addToOrder.bind(this);
       this.deleteOrder = this.deleteOrder.bind(this);
-      this.handleAdd = this.handleAdd.bind(this);
-      this.handleRemove = this.handleRemove.bind(this);
-
   }
+
+
+    componentDidMount(){
+      this.setState(prevState => ({
+           products: prevState.products.map(product =>
+            product.id === 1
+                ? {...product, quantity: 5}
+                : product)
+            }))
+    }
+
+    plus(id){
+      this.setState(prevState => ({
+          products: prevState.products.map(product =>
+              product.id === id
+              ?{...product, quantity: product.quantity + 1}
+                : product)
+      }))
+    }
+
+    minus(id){
+      this.setState(prevState => ({
+          products: prevState.products.map(product =>
+          product.id === id
+          ?{...product,quantity:product.quantity - 1}
+          : product)
+      }))
+    }
+
   render(){
-      const res = this.state.products.map(({price, ...rest}) =>({
-              ...rest,
-                price,
-              priceWithTax: price + price * 0.1
-          })
-          )
-      const filter = res.filter((item) =>item.priceWithTax > 500)
-        const iphone = filter.find({title} => title === "iPhone 14")
-      console.log(iphone)
+      const products = this.state.products;
+
   return (
     <div className="wrapper">
 
+        {products.map((product) => (
+            <div key={product.id}>
+                {this.showItem(product)}
+                <button onClick={() => this.plus(product.id)}>+</button>
+                <button onClick={() => this.minus(product.id)}>-</button>
+            </div>
+        ))}
 
-        {this.state.cartItems.map(item => (
-                <CartItem
-                    key={item.id}
-                    item={item}
-                    inAdd = {this.handleAdd}
-                    inDel = {this.handleRemove}
-                />
-            )
-        )}
+
       <Header
           orders={this.state.orders}
           onDelete={this.deleteOrder}
@@ -113,21 +128,12 @@ class App extends React.Component {
     );
   }
 
-    handleAdd(item){
-      this.setState(
-          prevState => ({
-            cartItems: prevState.cartItems.map(ci =>
-            ci.id === item.id ? {...ci, quantity: ci.quantity + 1}: ci)
-        })
-      )
+
+    showItem({title, price, id, quantity}){
+        return <div>{title} - {price}$ - {quantity}</div>
     }
 
-    handleRemove(item){
-      this.setState(prevState => ({
-          cartItems: prevState.cartItems.map(ci =>
-          ci.id === item.id ? {...ci, quantity: ci.quantity - 1}: ci)
-      }))
-    }
+
 
   deleteOrder(id){
     this.setState({orders: this.state.orders.filter(order =>
