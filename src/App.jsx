@@ -95,7 +95,7 @@ class App extends React.Component {
           ?{...product,quantity:product.quantity - 1}
           : product)
       }))
-    }//dsddыфы
+    }//dsddыфыee
 
   render(){
       const products = this.state.products;
